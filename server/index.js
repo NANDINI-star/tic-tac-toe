@@ -5,14 +5,14 @@ import {StreamChat} from "stream-chat";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import {z} from "zod";
+// import {z} from "zod";
 import crypto from "crypto";
 
 import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-const allowedOrigins = ['https://chat.stream-io-api.com', 'http://localhost:3000']
+const allowedOrigins = ['https://chat.stream-io-api.com', 'https://tic-tac-toe-frontend-roan.vercel.app/', 'http://localhost:3000']
 app.use(cors({
     origin: allowedOrigins, // Replace with the Stream Chat API domain
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -42,17 +42,17 @@ const User = mongoose.model('User', userSchema);
 
 mongoose.connect('mongodb+srv://nandini:winxclub8@testcluster1.mbm2f.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true, dbName: "tic-tac-toe" });
 
-const signupInput = z.object({
-    username: z.string().min(4, { message: "username must be 4 or more characters long" }).max(10, { message: "username must be 10 or fewer characters long" }),
-    password: z.string().min(4, { message: "password must be 4 or more characters long" }).max(10, { message: "password must be 10 or fewer characters long" }),
-    firstName: z.string().min(4, { message: "first name must be 4 or more characters long" }).max(10, { message: "first name must be 10 or fewer characters long" }),
-    lastName: z.string().min(4, { message: "last name must be 4 or more characters long" }).max(10, { message: "last name must be 10 or fewer characters long" }),
-})
+// const signupInput = z.object({
+//     username: z.string().min(4, { message: "username must be 4 or more characters long" }).max(10, { message: "username must be 10 or fewer characters long" }),
+//     password: z.string().min(4, { message: "password must be 4 or more characters long" }).max(10, { message: "password must be 10 or fewer characters long" }),
+//     firstName: z.string().min(4, { message: "first name must be 4 or more characters long" }).max(10, { message: "first name must be 10 or fewer characters long" }),
+//     lastName: z.string().min(4, { message: "last name must be 4 or more characters long" }).max(10, { message: "last name must be 10 or fewer characters long" }),
+// })
 
-const loginInput = z.object({
-    username: z.string().min(4, { message: "username must be 4 or more characters long" }).max(10, { message: "username must be 10 or fewer characters long" }),
-    password: z.string().min(4, { message: "password must be 4 or more characters long" }).max(10, { message: "password must be 10 or fewer characters long" }),
-})
+// const loginInput = z.object({
+//     username: z.string().min(4, { message: "username must be 4 or more characters long" }).max(10, { message: "username must be 10 or fewer characters long" }),
+//     password: z.string().min(4, { message: "password must be 4 or more characters long" }).max(10, { message: "password must be 10 or fewer characters long" }),
+// })
 
 app.get("/", (req, res) => {
     console.log("dsds")
@@ -75,21 +75,24 @@ app.post("/signup", async (req, res) => {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
         };
-        const parsedInput = signupInput.safeParse(userDetails);
+        // const parsedInput = signupInput.safeParse(userDetails);
 
         if(Object.values(userDetails).every(value => value !== 'null')){
-            if(!parsedInput.success) {
-                res.status(411).json({
-                    error: parsedInput.error
-                })
-                return;
-            }
-            const firstName = parsedInput.data.firstName;
-            const lastName = parsedInput.data.lastName;
-            const username = parsedInput.data.username;
-            const password = parsedInput.data.password;
+            // if(!parsedInput.success) {
+            //     res.status(411).json({
+            //         error: parsedInput.error
+            //     })
+            //     return;
+            // }
+            // const firstName = parsedInput.data.firstName;
+            // const lastName = parsedInput.data.lastName;
+            // const username = parsedInput.data.username;
+            // const password = parsedInput.data.password;
     
-            
+            const username = userDetails.username;
+            const firstName = userDetails.firstName;
+            const lastName = userDetails.lastName;
+            const password = userDetails.password;
             const user = await User.findOne({ username });
             if (user) {
                 res.status(403).json({ message: 'User already exists' });
@@ -116,16 +119,18 @@ app.post("/signup", async (req, res) => {
 
 app.post("/login", async (req, res) => {
     try {
-        const parsedInput = loginInput.safeParse(req.body);
+        // const parsedInput = loginInput.safeParse(req.body);
         if(Object.values(req.body).every(value => value !== 'null')){
-            if(!parsedInput.success) {
-                res.status(411).json({
-                    error: parsedInput.error
-                })
-                return;
-            }
-            const username = parsedInput.data.username;
-            const password = parsedInput.data.password;
+            // if(!parsedInput.success) {
+            //     res.status(411).json({
+            //         error: parsedInput.error
+            //     })
+            //     return;
+            // }
+            // const username = parsedInput.data.username;
+            // const password = parsedInput.data.password;
+            const username = req.body.username;
+            const password = req.body.password;
             const user = await User.findOne({ username });
             if (user) {
                 const token = serverClient.createToken(user.userId);

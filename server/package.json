@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "nodemon src/index.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -16,7 +16,6 @@
     "mongoose": "^7.5.3",
     "nodemon": "^3.0.1",
     "stream-chat": "^8.12.1",
-    "stream-chat-react": "^10.11.0",
-    "zod": "^3.22.2"
+    "stream-chat-react": "^10.11.0"
   }
 }
