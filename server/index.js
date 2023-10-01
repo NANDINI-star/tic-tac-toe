@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import {StreamChat} from "stream-chat";
 import {v4 as uuidv4} from "uuid";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import {z} from "zod";
@@ -54,6 +54,7 @@ const loginInput = z.object({
 })
 
 app.get("/", (req, res) => {
+    console.log("dsds")
     res.json("Hello");
 })
 
@@ -87,7 +88,7 @@ app.post("/signup", async (req, res) => {
             }
             else {
                 const userId = uuidv4();
-                const hashedPassword = await bcrypt.hash(password, 10);
+                const hashedPassword = await bcrypt.hashSync(password, 10);
                 const token = serverClient.createToken(userId);
                 const newUser = new User({userId, username, hashedPassword, firstName, lastName});
                 await newUser.save();
