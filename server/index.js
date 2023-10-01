@@ -12,7 +12,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-const allowedOrigins = ['https://chat.stream-io-api.com', 'https://tic-tac-toe-frontend-roan.vercel.app/', 'http://localhost:3000']
+const allowedOrigins = ['https://chat.stream-io-api.com', 'https://tic-tac-toe-jade-ten.vercel.app/', 'http://localhost:3000']
 app.use(cors({
     origin: allowedOrigins, // Replace with the Stream Chat API domain
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
