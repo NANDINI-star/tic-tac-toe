@@ -5,12 +5,12 @@ import {v4 as uuidv4} from "uuid";
 import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
+import {z} from "zod";
 
 import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-// app.use(cors())
 const allowedOrigins = ['https://chat.stream-io-api.com', 'http://localhost:3000']
 app.use(cors({
     origin: allowedOrigins, // Replace with the Stream Chat API domain
@@ -41,11 +41,33 @@ const User = mongoose.model('User', userSchema);
 
 mongoose.connect('mongodb+srv://nandini:winxclub8@testcluster1.mbm2f.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true, dbName: "tic-tac-toe" });
 
+const signupInput = z.object({
+    username: z.string().min(1).max(10),
+    password: z.string().min(6).max(20),
+    firstName: z.string().min(1).max(10),
+    lastName: z.string().min(1).max(10),
+})
+
+const loginInput = z.object({
+    username: z.string().min(1).max(10),
+    password: z.string().min(6).max(20),
+})
+
 
 app.post("/signup", async (req, res) => {
     try{
-        const {firstName, lastName, username, password} = req.body
-        console.log(req.body.user)
+        const parsedInput = signupInput.safeParse(req.body);
+        if(!parsedInput.success) {
+            res.status(411).json({
+                error: parsedInput.error
+            })
+            return;
+        }
+        const firstName = parsedInput.data.firstName;
+        const lastName = parsedInput.data.lastName;
+        const username = parsedInput.data.username;
+        const password = parsedInput.data.password;
+
         const user = await User.findOne({ username });
         if (user) {
             res.status(403).json({ message: 'User already exists' });
@@ -57,7 +79,7 @@ app.post("/signup", async (req, res) => {
             const newUser = new User({userId, username, hashedPassword, firstName, lastName});
             await newUser.save();
             console.log(token);
-            res.json({token, userId, firstName, lastName, username, hashedPassword})        
+            res.json({message: "User created successfully", token, userId, firstName, lastName, username, hashedPassword})        
         }
         
     } catch (error) {
@@ -67,7 +89,16 @@ app.post("/signup", async (req, res) => {
 
 app.post("/login", async (req, res) => {
     try {
-        const {username, password} = req.body;
+        const parsedInput = loginInput.safeParse(req.body);
+        if(!parsedInput.success) {
+            res.status(411).json({
+                error: parsedInput.error
+            })
+            return;
+        }
+        const username = parsedInput.data.username;
+        const password = parsedInput.data.password;
+        // const {username, password} = req.body;
         const user = await User.findOne({ username });
         console.log(user)
         if (user) {

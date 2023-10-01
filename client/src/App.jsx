@@ -8,6 +8,7 @@ import Cookies from "universal-cookie";
 import JoinGame from './components/game/JoinGame';
 
 function App() {
+  console.log("ccccc")
   const api_key = "ekv4nmgd9gaf";
   const cookies = new Cookies();
   const token = cookies.get("token")
@@ -41,6 +42,7 @@ function App() {
 
   return (
     <div className="App">
+      {console.log("aaaaaaaaaa")}
       {isAuth ? (
         <Chat client={client}>
           <JoinGame />
