@@ -22,8 +22,8 @@ app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }));
 
 
-const api_key = process.env.API_KEY;
-const api_secret = process.env.API_SECRET;
+const api_key = "ekv4nmgd9gaf";
+const api_secret = "psetvy8zkpvu2e4m5pcyw6efhdpehsabvqu7hw8fvybgfgdscyxe3ncneps5zw6j";
 
 const serverClient = StreamChat.getInstance(api_key, api_secret);
 

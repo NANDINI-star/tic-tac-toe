@@ -12,7 +12,7 @@ function Login(props) {
   params.append('password', password);
 
   const login = () => {
-    axios.post("http://localhost:3001/login", params).then((res) => {
+    axios.post("https://tic-tac-lugb3zorg-varunbagga19.vercel.app/login", params).then((res) => {
       const { token, userId, firstName, lastName, username}=
         res.data;
 
