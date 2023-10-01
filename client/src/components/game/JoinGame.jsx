@@ -9,13 +9,11 @@ function JoinGame() {
   const {client} = useChatContext();
   const [channel, setChannel] = useState(null);
   const createChannel = async () => {
-    // const response = await client.queryUsers({name: {$eq: rivalUsername}});
     const response = 
       await axios.post("http://localhost:3001/user", {rivalUsername}).then((res)=>{
         return res.data.user
       })
   
-    console.log(response)
     if(!response){
       alert("User not found")
       return

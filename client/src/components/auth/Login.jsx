@@ -22,6 +22,11 @@ function Login(props) {
       cookies.set("firstName", firstName);
       cookies.set("lastName", lastName);
       props.setIsAuth(true);
+    }).catch((error)=>{
+      if(error.response.data.message)
+        alert(error.response.data.message);
+      else
+        alert(error.response.data.error.issues[0].message)
     })
   }
 

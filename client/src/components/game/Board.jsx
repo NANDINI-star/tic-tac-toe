@@ -34,7 +34,6 @@ function Board({result, setResult}) {
 
   const checkWin = () => {
     Patterns.forEach((currPattern) => {
-      console.log(currPattern[0])
       const firstPlayer = board[currPattern[0]];
       if(firstPlayer === "") return;
       let foundWinningPattern = true;
@@ -45,7 +44,6 @@ function Board({result, setResult}) {
       })
 
       if(foundWinningPattern) {
-        console.log(board[currPattern[0]])
         alert("winner", board[currPattern[0]])
         setResult({winner: board[currPattern[0]], state: "won"})
       }
