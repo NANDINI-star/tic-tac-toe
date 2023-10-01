@@ -42,45 +42,58 @@ const User = mongoose.model('User', userSchema);
 mongoose.connect('mongodb+srv://nandini:winxclub8@testcluster1.mbm2f.mongodb.net/', { useNewUrlParser: true, useUnifiedTopology: true, dbName: "tic-tac-toe" });
 
 const signupInput = z.object({
-    username: z.string().min(1).max(10),
-    password: z.string().min(6).max(20),
-    firstName: z.string().min(1).max(10),
-    lastName: z.string().min(1).max(10),
+    username: z.string().min(4, { message: "username must be 4 or more characters long" }).max(10, { message: "username must be 10 or fewer characters long" }),
+    password: z.string().min(4, { message: "password must be 4 or more characters long" }).max(10, { message: "password must be 10 or fewer characters long" }),
+    firstName: z.string().min(4, { message: "first name must be 4 or more characters long" }).max(10, { message: "first name must be 10 or fewer characters long" }),
+    lastName: z.string().min(4, { message: "last name must be 4 or more characters long" }).max(10, { message: "last name must be 10 or fewer characters long" }),
 })
 
 const loginInput = z.object({
-    username: z.string().min(1).max(10),
-    password: z.string().min(6).max(20),
+    username: z.string().min(4, { message: "username must be 4 or more characters long" }).max(10, { message: "username must be 10 or fewer characters long" }),
+    password: z.string().min(4, { message: "password must be 4 or more characters long" }).max(10, { message: "password must be 10 or fewer characters long" }),
 })
 
 
 app.post("/signup", async (req, res) => {
     try{
-        const parsedInput = signupInput.safeParse(req.body);
-        if(!parsedInput.success) {
-            res.status(411).json({
-                error: parsedInput.error
-            })
-            return;
-        }
-        const firstName = parsedInput.data.firstName;
-        const lastName = parsedInput.data.lastName;
-        const username = parsedInput.data.username;
-        const password = parsedInput.data.password;
+        const userDetails = {
+            username: req.body.username,
+            password: req.body.password,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+        };
+        const parsedInput = signupInput.safeParse(userDetails);
 
-        const user = await User.findOne({ username });
-        if (user) {
-            res.status(403).json({ message: 'User already exists' });
+        if(Object.values(userDetails).every(value => value !== 'null')){
+            if(!parsedInput.success) {
+                res.status(411).json({
+                    error: parsedInput.error
+                })
+                return;
+            }
+            const firstName = parsedInput.data.firstName;
+            const lastName = parsedInput.data.lastName;
+            const username = parsedInput.data.username;
+            const password = parsedInput.data.password;
+    
+            
+            const user = await User.findOne({ username });
+            if (user) {
+                res.status(403).json({ message: 'User already exists' });
+            }
+            else {
+                const userId = uuidv4();
+                const hashedPassword = await bcrypt.hash(password, 10);
+                const token = serverClient.createToken(userId);
+                const newUser = new User({userId, username, hashedPassword, firstName, lastName});
+                await newUser.save();
+                res.json({message: "User created successfully", token, userId, firstName, lastName, username, hashedPassword})        
+            }
         }
         else {
-            const userId = uuidv4();
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const token = serverClient.createToken(userId);
-            const newUser = new User({userId, username, hashedPassword, firstName, lastName});
-            await newUser.save();
-            console.log(token);
-            res.json({message: "User created successfully", token, userId, firstName, lastName, username, hashedPassword})        
+            res.status(400).json({message: 'Required fields are empty'})
         }
+        
         
     } catch (error) {
         res.json(error);
@@ -100,11 +113,9 @@ app.post("/login", async (req, res) => {
         const password = parsedInput.data.password;
         // const {username, password} = req.body;
         const user = await User.findOne({ username });
-        console.log(user)
         if (user) {
             const token = serverClient.createToken(user.userId);
             const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
-            console.log(passwordMatch)
             if(passwordMatch) {
                 res.json({
                     token, 
@@ -115,7 +126,6 @@ app.post("/login", async (req, res) => {
                 });
             }
         } else {
-            console.log("aa")
             res.status(403).json({ message: 'Invalid username or password' });
         }
 

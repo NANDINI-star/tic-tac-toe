@@ -1,24 +1,42 @@
 import React, { useState } from 'react'
 import axios from "axios"
 import Cookies from "universal-cookie"
+import { errorMessage } from 'stream-chat-react/dist/components/AutoCompleteTextarea/utils';
 
 function SignUp(props) {
   const cookies = new Cookies();
   const [user, setUser] = useState(null);
+  const [username, setUsername] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [firstName, setFirstName] = useState(null);
+  const [lastName, setlastName] = useState(null);
   
+  const params = new URLSearchParams();
+  params.append('username', username);
+  params.append('password', password);
+  params.append('firstName', firstName);
+  params.append('lastName', lastName);
 
   const signUp = () => {
-    axios.post("http://localhost:3001/signup", user).then((res) => {
-      const { token, userId, firstName, lastName, username, hashedPassword}=
+    axios.post("http://localhost:3001/signup", params).then((res) => {
+
+      if(res.status == 200) {
+        const { token, userId, firstName, lastName, username, hashedPassword}=
         res.data;
-      console.log(res.data);
-      cookies.set("token", token);
-      cookies.set("userId", userId);
-      cookies.set("username", username);
-      cookies.set("firstName", firstName);
-      cookies.set("lastName", lastName);
-      cookies.set("hashedPassword", hashedPassword);
-      props.setIsAuth(true);
+        cookies.set("token", token);
+        cookies.set("userId", userId);
+        cookies.set("username", username);
+        cookies.set("firstName", firstName);
+        cookies.set("lastName", lastName);
+        cookies.set("hashedPassword", hashedPassword);
+        props.setIsAuth(true);
+      }
+      
+    }).catch((error) => {
+      if(error.response.data.message)
+        alert(error.response.data.message);
+      else
+        alert(error.response.data.error.issues[0].message)
     })
   }
 
@@ -30,18 +48,21 @@ function SignUp(props) {
           placeholder='First Name' 
           onChange={(e) => {
             setUser({...user, firstName: e.target.value});
+            setFirstName(e.target.value);
           }} 
         />
         <input 
           placeholder='Last Name' 
           onChange={(e) => {
             setUser({...user, lastName: e.target.value});
+            setlastName(e.target.value);
           }} 
         />
         <input 
           placeholder='Username' 
           onChange={(e) => {
             setUser({...user, username: e.target.value});
+            setUsername(e.target.value);
           }} 
         />
         <input 
@@ -49,13 +70,13 @@ function SignUp(props) {
           type="password"
           onChange={(e) => {
             setUser({...user, password: e.target.value});
+            setPassword(e.target.value);
           }} 
         />
       </div>
       <div>
-        <button onClick={signUp}>
-          {console.log("hh")}
-          Signup
+        <button className='signUp' onClick={signUp}>
+          SignUp
         </button>
       </div>
       
