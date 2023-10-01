@@ -20,7 +20,7 @@ function SignUp(props) {
   const signUp = () => {
     axios.post("http://localhost:3001/signup", params).then((res) => {
 
-      if(res.status == 200) {
+      if(res.status === 200) {
         const { token, userId, firstName, lastName, username, hashedPassword}=
         res.data;
         cookies.set("token", token);

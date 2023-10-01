@@ -103,30 +103,33 @@ app.post("/signup", async (req, res) => {
 app.post("/login", async (req, res) => {
     try {
         const parsedInput = loginInput.safeParse(req.body);
-        if(!parsedInput.success) {
-            res.status(411).json({
-                error: parsedInput.error
-            })
-            return;
-        }
-        const username = parsedInput.data.username;
-        const password = parsedInput.data.password;
-        // const {username, password} = req.body;
-        const user = await User.findOne({ username });
-        if (user) {
-            const token = serverClient.createToken(user.userId);
-            const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
-            if(passwordMatch) {
-                res.json({
-                    token, 
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    username,
-                    userId: user.userId
-                });
+        if(Object.values(req.body).every(value => value !== 'null')){
+            if(!parsedInput.success) {
+                res.status(411).json({
+                    error: parsedInput.error
+                })
+                return;
             }
-        } else {
-            res.status(403).json({ message: 'Invalid username or password' });
+            const username = parsedInput.data.username;
+            const password = parsedInput.data.password;
+            const user = await User.findOne({ username });
+            if (user) {
+                const token = serverClient.createToken(user.userId);
+                const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
+                if(passwordMatch) {
+                    res.json({
+                        token, 
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        username,
+                        userId: user.userId
+                    });
+                }
+            } else {
+                res.status(403).json({ message: 'Invalid username or password' });
+            }
+        } else{
+            res.status(400).json({message: 'Required fields are empty'})
         }
 
     } catch (error) {
@@ -138,7 +141,6 @@ app.post("/login", async (req, res) => {
 
 app.post('/user', async (req,res) => {
     const user = await User.findOne({ username: req.body.rivalUsername });
-
     res.json({user})
 })
 
