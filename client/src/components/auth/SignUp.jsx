@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import axios from "axios"
 import Cookies from "universal-cookie"
-import { errorMessage } from 'stream-chat-react/dist/components/AutoCompleteTextarea/utils';
+// import { errorMessage } from 'stream-chat-react/dist/components/AutoCompleteTextarea/utils';
 
 function SignUp(props) {
   const cookies = new Cookies();
@@ -35,8 +35,11 @@ function SignUp(props) {
     }).catch((error) => {
       if(error.response.data.message)
         alert(error.response.data.message);
-      else
+      else if(error.response.data.error.issues[0].message)
         alert(error.response.data.error.issues[0].message)
+      else 
+        alert(error);
+    
     })
   }
 

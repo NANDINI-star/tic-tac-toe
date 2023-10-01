@@ -1,11 +1,12 @@
 import express from "express";
 import cors from "cors";
 import {StreamChat} from "stream-chat";
-import {v4 as uuidv4} from "uuid";
+// import {v4 as uuidv4} from "uuid";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import {z} from "zod";
+import crypto from "crypto";
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -59,6 +60,13 @@ app.get("/", (req, res) => {
 })
 
 
+function generateNativeUuid() {
+    const data = crypto.randomBytes(16);
+    data[6] = (data[6] & 0x0f) | 0x40;  
+    console.log(data.toString('hex'))
+    return data.toString('hex');
+}
+
 app.post("/signup", async (req, res) => {
     try{
         const userDetails = {
@@ -87,7 +95,8 @@ app.post("/signup", async (req, res) => {
                 res.status(403).json({ message: 'User already exists' });
             }
             else {
-                const userId = uuidv4();
+                const userId = generateNativeUuid();
+                console.log(userId);
                 const hashedPassword = await bcrypt.hashSync(password, 10);
                 const token = serverClient.createToken(userId);
                 const newUser = new User({userId, username, hashedPassword, firstName, lastName});
