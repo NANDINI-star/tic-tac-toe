@@ -53,6 +53,10 @@ const loginInput = z.object({
     password: z.string().min(4, { message: "password must be 4 or more characters long" }).max(10, { message: "password must be 10 or fewer characters long" }),
 })
 
+app.get("/", (req, res) => {
+    res.json("Hello");
+})
+
 
 app.post("/signup", async (req, res) => {
     try{
