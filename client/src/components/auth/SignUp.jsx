@@ -17,8 +17,9 @@ function SignUp(props) {
   params.append('firstName', firstName);
   params.append('lastName', lastName);
 
+  const serverUrl = "https://tic-tac-toe-jade-ten.vercel.app/signup"
   const signUp = () => {
-    axios.post("https://tic-tac-lugb3zorg-varunbagga19.vercel.app/signup", params).then((res) => {
+    axios.post(serverUrl, params).then((res) => {
 
       if(res.status === 200) {
         const { token, userId, firstName, lastName, username, hashedPassword}=
