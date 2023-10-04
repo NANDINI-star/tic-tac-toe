@@ -3,8 +3,11 @@ import {useChannelStateContext, useChatContext} from 'stream-chat-react';
 import Square from './Square';
 import {Patterns} from "./WinningPatterns";
 
-function Board({result, setResult}) {
-  const [board, setBoard] = useState(["","","","","","","","",""]);
+function Board({result, setResult, onSave, initialBoard}) {
+  console.log(initialBoard, "BOARD")
+  const [board, setBoard] = useState(
+    (initialBoard != []) && (initialBoard != undefined) ? initialBoard :
+    ["","","","","","","","",""]);
   const [player, setPlayer] = useState("X");
   const [turn, setTurn] = useState("X");
 
@@ -79,6 +82,13 @@ function Board({result, setResult}) {
     }
   })
 
+  function handleSave() {
+    console.log("handleSave")
+    let postData = {board:board};
+    console.log("handleSave", postData)
+    onSave(postData);
+  }
+
   return (
     <div className='board'>
       <div className="row">
@@ -141,6 +151,7 @@ function Board({result, setResult}) {
           }}
         />
       </div>
+      <button onClick={handleSave}>save button</button>
     </div>
   )
 }

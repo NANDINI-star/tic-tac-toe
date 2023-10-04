@@ -3,7 +3,8 @@ import Board from './Board';
 import {Window, MessageList, MessageInput} from 'stream-chat-react';
 import "./Chat.css";
 
-function Game({channel, setChannel}) {
+function Game({channel, setChannel, onSave, board}) {
+  console.log(board)
   const [playersJoined, setPlayersJoined] = useState(
       channel.state.watcher_count === 2
     );
@@ -18,7 +19,7 @@ function Game({channel, setChannel}) {
   }
   return (
     <div className='gameContainer'>
-      <Board result={result} setResult={setResult}/>
+      <Board result={result} setResult={setResult} onSave={onSave} initialBoard={board}/>
       {/* CHAT */}
       <Window>
         <MessageList 

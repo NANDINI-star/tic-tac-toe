@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import Login from './components/auth/Login';
 import SignUp from './components/auth/SignUp';
@@ -6,13 +6,17 @@ import {StreamChat} from 'stream-chat';
 import {Chat} from 'stream-chat-react';
 import Cookies from "universal-cookie";
 import JoinGame from './components/game/JoinGame';
+import axios from "axios";
 
 function App() {
+  console.log("^^^^^^^^^^^^^^^^APP")
   const api_key = "ekv4nmgd9gaf";
   const cookies = new Cookies();
   const token = cookies.get("token")
   const client = StreamChat.getInstance(api_key);
   const [isAuth, setIsAuth] = useState(false);
+
+
 
   const logout = () => {
     cookies.remove("token");

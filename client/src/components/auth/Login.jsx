@@ -11,7 +11,8 @@ function Login(props) {
   params.append('username', username);
   params.append('password', password);
 
-  const serverUrl = "https://tic-tac-toe-jade-ten.vercel.app/login"
+  // const serverUrl = "https://tic-tac-toe-jade-ten.vercel.app/login"
+  const serverUrl = "http://localhost:3001/auth/login"
 
   const login = () => {
     axios.post(serverUrl, params).then((res) => {

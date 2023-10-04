@@ -17,7 +17,8 @@ function SignUp(props) {
   params.append('firstName', firstName);
   params.append('lastName', lastName);
 
-  const serverUrl = "https://tic-tac-toe-jade-ten.vercel.app/signup"
+  // const serverUrl = "https://tic-tac-toe-jade-ten.vercel.app/signup"
+  const serverUrl = "http://localhost:3001/auth/signup"
   const signUp = () => {
     axios.post(serverUrl, params).then((res) => {
 
