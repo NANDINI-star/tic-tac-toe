@@ -21,6 +21,7 @@ const serverClient = StreamChat.getInstance(api_key, api_secret);
 
 router.post("/signup", async (req, res) => {
   try{
+    console.log(req.body)
       const userDetails = {
           username: req.body.username,
           password: req.body.password,
