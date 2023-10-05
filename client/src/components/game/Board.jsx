@@ -13,6 +13,10 @@ function Board({result, setResult, onSave, initialBoard}) {
 
   const {channel} = useChannelStateContext();
   const {client} = useChatContext();
+  const [playerScore, setPlayerScore] = useState(0);
+  const [rivalScore, setRivalScore] = useState(0);
+  const [tieScore, setTieScore] = useState(0);
+
 
   useEffect(() => {
     checkIfTie();
@@ -36,7 +40,7 @@ function Board({result, setResult, onSave, initialBoard}) {
   }
 
   const checkWin = () => {
-    Patterns.forEach((currPattern) => {
+    Patterns.forEach(async(currPattern) => {
       const firstPlayer = board[currPattern[0]];
       if(firstPlayer === "") return;
       let foundWinningPattern = true;
@@ -49,10 +53,21 @@ function Board({result, setResult, onSave, initialBoard}) {
       if(foundWinningPattern) {
         alert("winner", board[currPattern[0]])
         setResult({winner: board[currPattern[0]], state: "won"})
+        handleReset();
+        console.log(board[currPattern[0]], turn)
+        if(board[currPattern[0]] === player){
+          setPlayerScore(playerScore+1);
+          await channel.sendEvent({
+            type: "set-score",
+            data: {rivalScore: playerScore, player},
+          })
+        }
+        
       }
+      
     })
   }
-
+  console.log("PLAYER SCORE", playerScore)
   const checkIfTie = () => {
     let filled = true;
     board.forEach((square) => {
@@ -65,10 +80,12 @@ function Board({result, setResult, onSave, initialBoard}) {
       alert("game tied");
 
       setResult({winner: "none", state: "tie"});
+      handleReset();
     }
   }
 
   channel.on((event) => {
+    console.log("channel on", event.user.id,client.userID)
     if(event.type === "game-move" && event.user.id !== client.userID) {
       const currentPlayer = event.data.player === "X" ? "O" : "X";
       setPlayer(currentPlayer);
@@ -80,6 +97,16 @@ function Board({result, setResult, onSave, initialBoard}) {
         return val;
       }))
     }
+    else if(event.type === "reset-game" && event.user.id !== client.userID) {
+      console.log("HERE")
+      const currentPlayer = event.data.player === "X" ? "O" : "X";
+      setPlayer(currentPlayer);
+      setTurn(currentPlayer);
+      setBoard(event.data.reset)
+    }
+    else if(event.type === "set-score" && event.user.id !== client.userID){
+      
+    }
   })
 
   function handleSave() {
@@ -87,6 +114,18 @@ function Board({result, setResult, onSave, initialBoard}) {
     let postData = {board:board};
     console.log("handleSave", postData)
     onSave(postData);
+  }
+
+  async function handleReset() {
+    console.log("1")
+    if( turn === player){
+      console.log("1")
+      setBoard(["","","","","","","","",""])
+      await channel.sendEvent({
+        type: "reset-game",
+        data: {reset: ["","","","","","","","",""], player},
+      })
+    }
   }
 
   return (
@@ -152,6 +191,24 @@ function Board({result, setResult, onSave, initialBoard}) {
         />
       </div>
       <button onClick={handleSave}>save button</button>
+      <button onClick={handleReset}>reset</button>
+      <p>you are player {player}</p>
+      <p>who's turn? =  {turn}</p>
+      <div>
+        <p>High Score</p>
+        <p>
+          <span>Player {player}</span>
+          <span>{playerScore}</span>
+        </p>
+        <p>
+          <span>Ties </span>
+          <span>{tieScore}</span>
+        </p>
+        <p>
+          <span>Rival Player {player === "X" ? "O" : "X"} </span>
+          <span>{rivalScore}</span>
+        </p>
+      </div>
     </div>
   )
 }
