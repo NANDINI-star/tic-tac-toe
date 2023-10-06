@@ -10,7 +10,6 @@ const router = express.Router();
 function generateNativeUuid() {
   const data = crypto.randomBytes(16);
   data[6] = (data[6] & 0x0f) | 0x40;  
-  console.log(data.toString('hex'))
   return data.toString('hex');
 }
 

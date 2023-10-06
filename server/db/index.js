@@ -13,6 +13,7 @@ const channelSchema = new mongoose.Schema({
   userId1: String,
   userId2: String,
   channelId: String,
+  gameId: String,
   gameName: String,
   gamePattern: String
 })

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './App.css';
+import './App.scss';
 import Login from './components/auth/Login';
 import SignUp from './components/auth/SignUp';
 import {StreamChat} from 'stream-chat';
@@ -7,9 +7,9 @@ import {Chat} from 'stream-chat-react';
 import Cookies from "universal-cookie";
 import JoinGame from './components/game/JoinGame';
 import axios from "axios";
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 function App() {
-  console.log("^^^^^^^^^^^^^^^^APP")
   const api_key = "ekv4nmgd9gaf";
   const cookies = new Cookies();
   const token = cookies.get("token")
@@ -47,14 +47,19 @@ function App() {
     <div className="App">
       {isAuth ? (
         <Chat client={client}>
-          <JoinGame />
-          <button onClick={logout}>Log out</button>
+          <div>
+          <JoinGame logout={logout}/>
+          </div>
         </Chat>
       ) : (
-        <>
-          <SignUp setIsAuth={setIsAuth}/>
-          <Login setIsAuth={setIsAuth}/>
-        </>
+      <Router>
+        <Routes>
+          <Route path='/signup' element={<SignUp setIsAuth={setIsAuth}/>} />
+          <Route path='/login' element={<Login setIsAuth={setIsAuth}/>} />
+        </Routes>
+      </Router>
+        
+        
         
       )}
       

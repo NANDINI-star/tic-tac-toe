@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    rgb(0, 0, 0)
+  ) rgb(0, 0, 0);
+}
+
+@keyframes moveUp {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(-20px);
+    opacity: 1;
+  }
+}
+
+.board {
+  width: 500px;
+  height: 500px;
+  background-color: rgb(252, 252, 252);
+  display: flex;
+  flex-direction: column;
+} 
+
+.row {
+  flex: 33%;
+  display: flex;
+  flex-direction: row;
+}
+
+ .square {
+  flex: 33%;
+  height: 100%;
+  border: 5px solid black;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+  color: black;
+  font-family: Arial, Helvetica, sans-serif;
+  .top-1{
+    border-bottom: 5px solid black;
+  }
+}
+
+.square:active {
+  background-color: lightgray;
+}

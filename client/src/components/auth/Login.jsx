@@ -34,22 +34,62 @@ function Login(props) {
   }
 
   return (
-    <div className='login'>
-      <label>Login</label>
-      <input 
-        placeholder='Username' 
-        onChange={(e) => {
-          setUsername(e.target.value);
-        }} 
-      />
-      <input 
-        placeholder='Password' 
-        type="password"
-        onChange={(e) => {
-          setPassword(e.target.value);
-        }} 
-      />
-      <button onClick={login}>Login</button>
+    <div className='flex flex-col md:flex-row bg-[#F5F5F5] min-h-screen'>
+      {/* Left Section */}
+      <div className='w-full md:w-1/2 flex flex-col justify-center items-center bg-primary py-10 px-6 md:px-12'>
+        <img src='/undraw_contemplating_re_ynec.svg' className='h-64 md:h-auto object-contain' alt='Login Background' />
+        <h1 className='text-2xl md:text-4xl text-black font-bold text-center mt-6'>
+          Let's Tic Tac Toe
+        </h1>
+        <p className='text-lg md:text-xl text-black font-semibold text-center mt-2'>
+          Tickle your toes with tic-tac-toe
+        </p>
+      </div>
+
+      {/* Right Section */}
+      <div className='w-full md:w-1/2 flex flex-col justify-center items-center p-6 md:p-12'>
+        <h1 className='text-xl md:text-3xl text-[#060606] font-semibold mb-4'>Tic Tac Toe !</h1>
+
+        <div className='w-full max-w-md'>
+          <div className='mb-6'>
+            <h3 className='text-xl md:text-2xl font-semibold mb-2 text-black'>Login</h3>
+            <p className='text-base md:text-lg mb-2 text-black'>Welcome Back! Please enter your details.</p>
+          </div>
+
+          <div className='w-full mb-4'>
+            <input
+              type='text'
+              placeholder='Username'
+              onChange={(e) => {
+                setUsername(e.target.value);
+              }} 
+              className='w-full text-black py-2 px-3 bg-transparent border-b border-black placeholder-gray-500 focus:outline-none'
+            />
+          </div>
+
+          <div className='w-full mb-4'>
+            <input
+              type='password'
+              placeholder='Password'
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }} 
+              className='w-full text-black py-2 px-3 bg-transparent border-b border-black placeholder-gray-500 focus:outline-none'
+            />
+          </div>
+
+          <button className='w-full bg-purple-800 text-white rounded-md py-3 md:py-4 mb-4 md:mb-6 hover:bg-gray-900 flex items-center justify-center' onClick={login}>
+            Log in
+          </button>
+        </div>
+        
+        <p className='text-sm text-black mt-6'>
+          Dont have an account?
+          <a href={"/signup"}>
+            <span className='font-semibold underline cursor-pointer'>Sign up for free</span>
+          </a>
+        </p>
+      </div>
     </div>
   )
 }
