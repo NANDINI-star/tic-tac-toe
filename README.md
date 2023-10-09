@@ -29,9 +29,10 @@ All these requests send and retrieve data from MongoDB
 ## Completed Features
 1. Creating Account: Users can sign up and create their accounts.
 2. Play Live: Users can play live with another player. It's a multiplayer game.
-3. Reset Board: You can reset the board.
-4. Save Game: You can save the current state of your board.
-5. Leave game: You can leave the game anytime you want.
+3. Chat Live: Chat with the rival player, while you're playing the game.
+4. Reset Board: You can reset the board.
+5. Save Game: You can save the current state of your board.
+6. Leave game: You can leave the game anytime you want.
 
 ## Planned Features
 1. Retrieve the game: Retrieve the saved game state, to resume the game.
