@@ -1,5 +1,5 @@
 # tic-tac-toe with chat.
-Here's a video of the game: https://drive.google.com/file/d/19iR8hlL4BjqGy_S98Hfi3OQLi0k3MSA-/view?usp=sharing
+Here's a video of the game: https://drive.google.com/file/d/1ZbCKsSVG95EdKV8ZaZSejfcIMSQTNqeB/view?usp=sharing
 
 A tic-tac-toe game, that you can play live with your friends. You can also chat with the rival player at the same time.
 ## Tech used
